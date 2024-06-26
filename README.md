@@ -12,6 +12,35 @@ The Sipharmony Device Manager is a fast and lightweight device and provisioning 
 - Device backup and restore
 - Device logs
 
+## Supported Devices
+
+- Aastra
+- Algo
+- Atcom
+- Cisco
+- Digium
+- Escene
+- Fanvil
+- Flyingvoice
+- Grandstream
+- Htek
+- Linksys
+- Linphone
+- Mitel
+- Obihai
+- Panasonic
+- Poly
+- Polycom
+- Sangoma
+- Snom
+- Spectralink
+- Swissvoice
+- Telekonnectors
+- Vtech
+- Yealink
+- Yeastar
+- Zoiper
+
 ## Installation
 
 ```bash
