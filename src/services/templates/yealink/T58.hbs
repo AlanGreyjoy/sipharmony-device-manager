@@ -1,0 +1,13 @@
+{{! Description: Yealink T58 template }}
+{{! Version: 1.0 }}
+
+{{#each line}}
+account.{{this}}.codec.g722.enable = 1
+account.{{this}}.codec.g722_1c_48kpbs.enable = 0
+account.{{this}}.codec.g722_1c_32kpbs.enable = 0
+account.{{this}}.codec.g722_1c_24kpbs.enable = 0
+account.{{this}}.codec.g722_1_24kpbs.enable = 0
+account.{{this}}.video.h264.enable = 0
+account.{{this}}.video.h264hp.enable = 0
+account.{{this}}.video.vp8.enable = 0
+{{/each}}
