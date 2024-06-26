@@ -1,0 +1,29 @@
+{
+  "name": "sipharmony-device-manager",
+  "version": "1.0.0",
+  "description": "A Node.js provisioning server for VoIP IP devices. This server is designed to work with the Wazo-Platform 😎",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Alan Spurlock <aspurlock@sipharmony.com> (https://sipharmony.com)",
+  "license": "MIT",
+  "keywords": [
+    "wazo",
+    "voip",
+    "provisioning",
+    "device",
+    "manager"
+  ],
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.2",
+    "nodemon": "^3.1.4"
+  }
+}
