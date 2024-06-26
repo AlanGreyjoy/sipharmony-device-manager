@@ -2,10 +2,11 @@
 
 The Sipharmony Device Manager is a fast and lightweight device and provisioning server for VoIP IP phones. It is designed to be used with the Wazo-Platform.
 
-- Provision devices with any subdomain and/or FQDN + `/provisioning/{deviceKey}` endpoint
+The device manager and provisioning server will borrow the concept of "Provisioning keys" from the Wazo-Platform. This will allow you to provision devices with a simple URL and a device key. The device manager will then take care of the rest 🥳
 
 ## Features
 
+- Provision devices with any subdomain and/or FQDN + `/provisioning/{deviceKey}` endpoint
 - Device provisioning
 - Device management
 - Device monitoring
