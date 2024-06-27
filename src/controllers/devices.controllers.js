@@ -1,4 +1,5 @@
 const deviceService = require('../services/devices/deviceKey.service')
+const userAgentParser = require('../utils/userAgentParser')
 const logger = require('../utils/logger')
 
 /**
@@ -27,41 +28,12 @@ module.exports.getFile = async (req, res) => {
     return res.status(400).send({ message: 'File name is required!' })
   }
 
+  // Get user agent
+  const userAgent = userAgentParser.parse(req.headers['user-agent'])
+  console.log(userAgent)
+
   const file = fileName.split('.')[0]
   const extension = fileName.split('.')[1]
 
-  res.download(`./public/${file}.${extension}`, `${file}.${extension}`)
-}
-
-/**
- * Create a new device key
- * @param {*} req
- * @param {*} res
- * @returns
- */
-module.exports.createDeviceKey = async (req, res) => {
-  const { tenantUuid, deviceKey } = req.body
-
-  if (!tenantUuid) {
-    logger.error('Tenant UUID was not provided!')
-    return res.status(400).send({ message: 'Tenant UUID is required!' })
-  }
-
-  if (!deviceKey) {
-    logger.error('Device key was not provided!')
-    return res.status(400).send({ message: 'Device key is required!' })
-  }
-
-  const getDeviceKey = await deviceService.getDeviceKey(tenantUuid)
-
-  if (getDeviceKey) {
-    logger.error(`Device key already exists for tenant: <${tenantUuid}>`)
-    return res.status(403).send({ message: 'Device key already exists!' })
-  }
-
-  await deviceService.createDeviceKey(tenantUuid, deviceKey)
-
-  logger.info(`Device key created for tenant: <${tenantUuid}>`)
-
-  return res.status(201).send({ message: 'Device key created!' })
+  res.download(`./public/${tenantUuid}/${file}.${extension}`, `${file}.${extension}`)
 }
