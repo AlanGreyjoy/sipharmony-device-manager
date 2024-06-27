@@ -58,3 +58,18 @@ Installation is easy! Just follow the steps below.
 ```bash
 Coming soon
 ```
+
+### ENV Variables
+
+```bash
+PORT=
+
+## MongoDB
+MONGO_SRV=
+
+## Wazo-Platform
+WAZO_HOST=
+WAZO_API_CLIENT_NAME=
+WAZO_API_CLIENT_PASSWORD=
+dev-master-api-password=
+```

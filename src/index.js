@@ -1,11 +1,23 @@
 require('dotenv').config()
 const server = require('./app')
 const logger = require('./utils/logger')
+const mongooseService = require('./services/mongoose/mongoose.service')
 
 init()
 
 async function init() {
-  startServer()
+  await connectToDatabase()
+  await startServer()
+}
+
+async function connectToDatabase() {
+  logger.info('Connecting to database...')
+
+  await mongooseService.connect().catch(err => {
+    logger.error('Error connecting to database: ', err)
+
+    process.exit(1)
+  })
 }
 
 async function startServer() {

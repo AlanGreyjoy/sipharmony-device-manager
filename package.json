@@ -27,6 +27,7 @@
     "handlebars": "^4.7.8",
     "helmet": "^7.1.0",
     "http": "^0.0.1-security",
+    "mongoose": "^8.4.4",
     "request-received": "^0.0.3",
     "response-time": "^2.3.2",
     "signale": "^1.4.0"
