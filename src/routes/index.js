@@ -8,6 +8,10 @@ const routes = [
   {
     path: '/device-keys',
     route: require('./deviceKeys/deviceKeys.routes')
+  },
+  {
+    path: '/device-settings',
+    route: require('./deviceSettings/deviceSettings.routes')
   }
 ]
 

@@ -85,3 +85,11 @@ dev-master-api-password=
 YEALINK_YMCS_ACCESS_KEY=
 YEALINK_YMCS_ACCESS_KEY_SECRET=
 ```
+
+### Current Routes
+
+A proper swagger documentation will be added soon. For now, here are the current routes:
+
+- `/devices`
+- `/device-keys`
+- `/device-settings`
