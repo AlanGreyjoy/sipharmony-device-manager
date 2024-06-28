@@ -230,7 +230,7 @@ features.custom_version_info =
 #######################################################################################
 ##                                   Autop PNP                                       ##
 #######################################################################################
-static.auto_provision.pnp_enable =
+static.auto_provision.pnp_enable = 0
 
 
 #######################################################################################
@@ -282,7 +282,7 @@ static.firmware.url = {{yealink_firmware_url}}/{{yealink_firmware_t46s}}
 
 
 #######################################################################################
-##                            Confguration                                           ##
+##                            Configuration                                          ##
 #######################################################################################
 features.factory_reset_option =
 features.reset_by_long_press_enable =
@@ -349,14 +349,14 @@ static.security.default_ssl_method = {{yealink_security_default_ssl_method}}
 static.security.cn_validation = 
 static.security.dev_cert = 
 static.security.ca_cert = 
-static.security.trust_certificates = {{yealink_trust_certificates}}
+static.security.trust_certificates = 0
+static.security.Default.trust_certificates = 0
 
-static.security.user_password = {{var_name}}:{{var_password}}
-static.security.user_password = {{admin_name}}:{{admin_password}}
-static.security.user_password = {{user_name}}:{{user_password}}
-static.security.user_name.var = {{var_name}}
-static.security.user_name.admin = {{admin_name}}
-static.security.user_name.user = {{user_name}}
+static.security.user_name.user = {{webui_user_name}}
+static.security.user_name.admin = {{webui_admin_name}}
+static.security.user_password = {{webui_user_name}}:{{webui_user_password}}
+static.security.user_password = {{webui_admin_name}}:{{webui_admin_password}}
+
 security.tls_cipher_list = {{yealink_security_tls_cipher_list}}
 
 
@@ -403,28 +403,32 @@ transfer.on_hook_trans_enable =
 transfer.tran_others_after_conf_enable =
 transfer.blind_tran_on_hook_enable =
 transfer.semi_attend_tran_enable = {{yealink_transfer_semi_attended}}
-phone_setting.call_appearance.transfer_via_new_linekey=
+phone_setting.call_appearance.transfer_via_new_linekey =
 
 
 #######################################################################################
 ##                                   Conference                                      ##
 #######################################################################################
 features.conference.with_previous_call.enable =
-features.local_conf.combine_with_one_press.enable=
-phone_setting.call_appearance.conference_via_new_linekey=
+features.local_conf.combine_with_one_press.enable =
+phone_setting.call_appearance.conference_via_new_linekey =
 
 
 #######################################################################################
 ##                                   Anonymous                                       ##
 #######################################################################################
-features.anonymous_response_code=
+features.anonymous_response_code =
 
 
 #######################################################################################
 ##                          Call Configuration                                       ##
 #######################################################################################
 phone_setting.incoming_call_when_dialing.priority=
-{if isset($yealink_hold_or_swap_mode)}phone_setting.hold_or_swap.mode = {{yealink_hold_or_swap_mode}}{else}phone_setting.hold_or_swap.mode = 0{/if}
+{{#if yealink_hold_or_swap_mode}}
+phone_setting.hold_or_swap.mode = {{yealink_hold_or_swap_mode}}
+{{else}}
+phone_setting.hold_or_swap.mode = 0
+{{/if}}
 
 features.play_held_tone.interval=
 features.play_held_tone.delay=
@@ -846,7 +850,7 @@ programablekey.1.history_type =
 #Configure Line Key {{row.device_key_id}}
 linekey.{{row.device_key_id}}.line = {{row.device_key_line}}
 linekey.{{row.device_key_id}}.value = {{row.device_key_value}}
-{{#if row.device_key_type == "1" || row.device_key_type == "16"}}
+{{#if (or (eq row.device_key_type "1") (eq row.device_key_type "16"))}}
 linekey.{{row.device_key_id}}.pickup_value = {{row.device_key_extension}}
 {{else}}
 linekey.{{row.device_key_id}}.extension = {{row.device_key_extension}}
@@ -855,6 +859,7 @@ linekey.{{row.device_key_id}}.type = {{row.device_key_type}}
 linekey.{{row.device_key_id}}.xml_phonebook =
 linekey.{{row.device_key_id}}.label = {{row.device_key_label}}
 {{/each}}
+
 
 
 #######################################################################################  

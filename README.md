@@ -64,12 +64,24 @@ Coming soon
 ```bash
 PORT=
 
+# SIP Server Configuration
+# This is the SIP server that the devices will connect to
+# Please don't be silly and use and IP address. Use a FQDN or subdomain instead!
+SIP_SERVER_HOST=
+
 ## MongoDB
+## This is the MongoDB connection string. You can use MongoDB Atlas or a local MongoDB server. Docker Desktop also has a MongoDB image.
 MONGO_SRV=
 
-## Wazo-Platform
+# Wazo-Platform
+# This is the Wazo-Platform API information. You can get this information from the Wazo-Platform API documentation.
 WAZO_HOST=
 WAZO_API_CLIENT_NAME=
 WAZO_API_CLIENT_PASSWORD=
 dev-master-api-password=
+
+# Yealink YMCS API
+# This is the Yealink YMCS API information. You can get this information from the Yealink YMCS API documentation.
+YEALINK_YMCS_ACCESS_KEY=
+YEALINK_YMCS_ACCESS_KEY_SECRET=
 ```

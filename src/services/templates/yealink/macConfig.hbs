@@ -1,0 +1,536 @@
+#!version:1.0.0.1
+#{$microtime}
+
+##File header "#!version:1.0.0.1" can not be edited or deleted, and must be placed in the first line.##
+
+{{#each accounts as |account|}}
+#######################################################################################
+##                           Account {{account.id}} Basic Settings                   ##
+#######################################################################################
+account.{{account.id}}.enable = {{#if account.enable}}1{{else}}0{{/if}}
+account.{{account.id}}.label = {{account.label}}
+account.{{account.id}}.display_name = {{account.display_name}}
+account.{{account.id}}.auth_name = {{account.auth_name}}
+account.{{account.id}}.user_name = {{account.user_name}}
+account.{{account.id}}.password = {{account.password}}
+account.{{account.id}}.sip_server.1.address = {{account.server_address}}
+account.{{account.id}}.sip_server.1.port = {{account.sip_port}}
+account.{{account.id}}.sip_server.1.transport_type = {{account.sip_transport}}
+account.{{account.id}}.sip_server.1.expires = {{account.register_expires}}
+account.{{account.id}}.sip_server.1.retry_counts = {{#if account.retry_counts}}{{account.retry_counts}}{{else}}3{{/if}}
+
+#######################################################################################
+##                          Failback                                                 ##
+#######################################################################################
+account.{{account.id}}.dns_cache_type = 1
+
+account.{{account.id}}.dns_cache_a.1.name =
+account.{{account.id}}.dns_cache_a.1.ip =
+account.{{account.id}}.dns_cache_a.1.ttl = 300
+
+account.{{account.id}}.dns_cache_srv.1.name =
+account.{{account.id}}.dns_cache_srv.1.port = 0
+account.{{account.id}}.dns_cache_srv.1.priority = 0
+account.{{account.id}}.dns_cache_srv.1.target =
+account.{{account.id}}.dns_cache_srv.1.weight = 0
+account.{{account.id}}.dns_cache_srv.1.ttl = 300
+account.{{account.id}}.dns_cache_naptr.1.name =
+account.{{account.id}}.dns_cache_naptr.1.flags =
+account.{{account.id}}.dns_cache_naptr.1.order = 0
+account.{{account.id}}.dns_cache_naptr.1.preference = 0
+account.{{account.id}}.dns_cache_naptr.1.replace =
+account.{{account.id}}.dns_cache_naptr.1.service =
+account.{{account.id}}.dns_cache_naptr.1.ttl = 300
+
+account.{{account.id}}.static_cache_pri = 0
+
+#######################################################################################
+##                           Register Advanced                                       ##
+#######################################################################################
+## ranges from 1 to 6;
+##account.X.sip_server_type =
+
+#Configure the SIP server type; 0-Default (default), 2-BroadSoft, 4-Cosmocom;
+account.{{account.id}}.sip_server_type =
+#Enable or disable the phone to send the account log-off message first and then send account register message when rebooting the phone; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.unregister_on_reboot =
+
+#Enable or disable the phone to only accept the message from the server; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.sip_trust_ctrl = 1
+
+#Configure the timeout (in seconds) for DNS query, the value ranges from 1 to 9, the default value is 8.
+account.{{account.id}}.dns_query_timeout=
+
+#Enable or disable the timer to periodically refresh the DNS-SRV query result; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.srv_ttl_timer_enable =
+account.{{account.id}}.proxy_require =
+
+
+#Enable or disable the phone to send the MAC address and line number in the Register message; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.register_mac =
+account.{{account.id}}.register_line =
+
+#Configure the interval (in seconds) the phone retries to register when account1 fails to register. It ranges from 0 to 1800, the default value is 30.
+account.{{account.id}}.reg_fail_retry_interval =
+
+account.{{account.id}}.register_mac = 1
+account.{{account.id}}.register_line = 1
+
+#########################################################################
+##                     NAT Settings                                    ##
+#########################################################################
+
+#Enable or disable the NAT traversal; 0-Disabled (default), 1-STUN;
+account.{{account.id}}.nat.nat_traversal = {{#if stun_server}}1{{else}}0{{/if}}
+
+#Configure the STUN server address.
+account.{{account.id}}.nat.stun_server = {{stun_server}}
+
+#Configure the STUN server port, the default value is 3478.
+account.{{account.id}}.nat.stun_port = {{#if stun_port}}{{stun_port}}{{else}}3478{{/if}}
+
+#Enable or disable the NAT keep-alive; 0-Disabled, 1-Default (default), 2-Option, 3-Notify;
+account.{{account.id}}.nat.udp_update_enable = 1
+
+#Specify the keep-alive interval (in seconds), the default value is 30.
+account.{{account.id}}.nat.udp_update_time = 30
+
+#Enable or disable the NAT Rport; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.nat.rport = 1
+
+
+#######################################################################################
+##                            AccountX Advance Settings                              ##
+#######################################################################################
+## ranges from 1 to 6;
+##account.X.advanced.timer_t1 = 0.5
+##voice_mail.number.X =
+
+#Configure the session timer (in seconds), the default value of T1, T2, T3 is 0.5, 4, 5.
+account.{{account.id}}.advanced.timer_t1 =
+account.{{account.id}}.advanced.timer_t2 =
+account.{{account.id}}.advanced.timer_t4 =
+
+voice_mail.number.1 = *98
+
+
+#######################################################################################
+##                            Subscribe                                              ##
+#######################################################################################
+## ranges from 1 to 6;
+##account.X.subscribe_mwi =
+
+account.{{account.id}}.subscribe_mwi = {{yealink_subscribe_mwi}}
+account.{{account.id}}.subscribe_mwi_expires = 3600
+
+#Enable or disable the phone to subscribe to the voicemail through the message waiting indicator; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.subscribe_mwi_to_vm = {{yealink_subscribe_mwi_to_vm}}
+
+account.{{account.id}}.subscribe_acd_expires= 3600
+
+
+#######################################################################################
+##                            BLF List                                               ##
+#######################################################################################
+## ranges from 1 to 6;
+##account.X.blf.blf_list_uri =
+
+#Configure the BLF list URI (a SIP URI, or use part of the SIP URI). For example, "2300_blflist@domain.com" or "2300_blflist".
+account.{{account.id}}.blf.blf_list_uri =
+
+account.{{account.id}}.blf_list_code =
+account.{{account.id}}.blf_list_barge_in_code =
+account.{{account.id}}.blf.subscribe_period = 1800
+
+account.{{account.id}}.blf.subscribe_event =
+account.{{account.id}}.out_dialog_blf_enable = 0
+
+
+#######################################################################################
+##                            Audio Codec                                            ##
+#######################################################################################
+#Audio codecs for account1 (Y ranges from 1 to 11).
+#Enable or disable the specified codec; 0-Disabled, 1-Enabled;
+#account.{{account.id}}.codec.Y.enable =
+#The type of the specified codec.
+#account.{{account.id}}.codec.Y.payload_type =
+#The priority of the specified codec. It's available when the codec is enabled.
+#account.{{account.id}}.codec.Y.priority =
+#The payload of the specified codec.
+#account.{{account.id}}.codec.Y.rtpmap =
+
+account.{{account.id}}.codec.g722.enable = 1
+account.{{account.id}}.codec.g722_1c_48kpbs.enable = 1
+account.{{account.id}}.codec.g722_1c_32kpbs.enable = 1
+account.{{account.id}}.codec.g722_1c_24kpbs.enable = 1
+account.{{account.id}}.codec.g722_1_24kpbs.enable = 1
+account.{{account.id}}.codec.pcmu.enable = 1
+account.{{account.id}}.codec.pcma.enable = 1
+account.{{account.id}}.codec.g729.enable = 1
+account.{{account.id}}.codec.g726_16.enable = 0
+account.{{account.id}}.codec.g726_24.enable = 0
+account.{{account.id}}.codec.g726_32.enable = 0
+account.{{account.id}}.codec.g726_40.enable = 0
+account.{{account.id}}.codec.g723_53.enable = 0
+account.{{account.id}}.codec.g723_63.enable = 0
+account.{{account.id}}.codec.opus.enable = 0
+account.{{account.id}}.codec.ilbc.enable = 0
+
+
+#######################################################################################
+##                            Audio Advanced                                         ##
+#######################################################################################
+#Specify whether to encrypt the SIP messages; 0-Disabled (default), 1-Forced, 2-Negotiated;
+account.{{account.id}}.srtp_encryption = {{yealink_srtp_encryption}}
+
+#Configure the RTP packet time. The valid values are 0 (Disabled), 10, 20 (default), 30, 40, 50, 60.
+account.{{account.id}}.ptime =
+
+
+#######################################################################################
+##                            Anonymous Call                                         ##
+#######################################################################################
+account.{{account.id}}.anonymous_call = 0
+account.{{account.id}}.anonymous_call_oncode =
+account.{{account.id}}.anonymous_call_offcode =
+
+account.{{account.id}}.reject_anonymous_call =
+account.{{account.id}}.anonymous_reject_oncode =
+account.{{account.id}}.anonymous_reject_offcode =
+
+#######################################################################################
+##                            Pickup Code                                            ##
+#######################################################################################
+account.{{account.id}}.dialoginfo_callpickup = 0
+
+#Configure the directed and group pickup codes for account 1, the settings on a per-account basis take precedence over the settings on the phone.
+account.{{account.id}}.group_pickup_code =
+account.{{account.id}}.direct_pickup_code =
+
+#######################################################################################
+##                            DTMF                                                   ##
+#######################################################################################
+#Configure the DTMF type; 0-INBAND, 1-RFC2833 (default), 2-SIP INFO, 3-AUTO+SIP INFO;
+account.{{account.id}}.dtmf.type = 1
+
+#Configure the DTMF info type when using the SIP INFO; 0-Disabled (default), 1-DTMF-Relay, 2-DTMF, 3-Telephone-Event;
+account.{{account.id}}.dtmf.info_type = 1
+
+#Configure the RFC2833 payload. It ranges from 96 to 255, the default value is 101.
+account.{{account.id}}.dtmf.dtmf_payload =
+
+#######################################################################################
+##                            Alert info                                             ##
+#######################################################################################
+#Enable or disable to use the Distinctive Ring Tones; 0-Disabled , 1-Enabled(default);
+account.{{account.id}}.alert_info_url_enable =
+
+#Assign a ringtone for account1. The system ring tones are: common (default), Ring1.wav - Ring8.wav.
+#If you set the custom ring tone (Busy.wav) for the phone, the value is: account.{{account.id}}.ringtone.ring_type = Config:Busy.wav
+#If you set the system ring tone (Ring2.wav) for the phone, the value is: account.{{account.id}}.ringtone.ring_type = Resource:Ring2.wav
+account.{{account.id}}.ringtone.ring_type =
+
+account.{{account.id}}.picture_info_enable = 1
+
+#######################################################################################
+##                            Conference                                             ##
+#######################################################################################
+#Configure the conference type; 0-Local (default), 2-Network Conference;
+account.{{account.id}}.conf_type =
+
+#Configure the conference URI (a SIP URI, or use part of the SIP URI). For example, "conference@domain.com" or "conference".
+account.{{account.id}}.conf_uri = 
+
+#######################################################################################
+##                            cid_source                                             ##
+#######################################################################################
+#Configure the type of SIP header(s) to carry the caller ID; 0-FROM (default), 1-PAI 2-PAI-FROM, 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM;
+account.{{account.id}}.cid_source = 2
+
+account.{{account.id}}.cid_source_privacy = 1
+account.{{account.id}}.cid_source_ppi = 1
+
+#Configure the presentation of the callee ID; 0-PAI-PRID, 1-DIALED DIGITS (default), 2-RFC4916;
+account.{{account.id}}.cp_source = 1
+
+#######################################################################################
+##                            Session Timer                                          ##
+#######################################################################################
+#Enable or disable the session timer, 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.session_timer.enable = 0
+
+#Configure the refresh session timer interval (in seconds). It ranges from 1 to 9999.
+account.{{account.id}}.session_timer.expires =
+
+#Configure the session timer refresher; 0-Uac (default), 1-Uas;
+account.{{account.id}}.session_timer.refresher =
+
+#######################################################################################
+##                            Music on Hold                                          ##
+#######################################################################################
+#Configure the type of Music on Hold; 0-Send the INVITE request to Music on Hold Server then hold the call; 1-Hold the call then send the INVITE request to Music on Hold Server;
+#Require reboot;
+account.{{account.id}}.music_on_hold_type =
+
+account.{{account.id}}.music_server_uri =
+
+#######################################################################################
+##                            Advanced                                               ##
+#######################################################################################
+#Enable or disable the auto answer feature; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.auto_answer =
+
+#Enable or disable the phone to record the missed call; 0-Disabled, 1-Enabled (default);
+account.{{account.id}}.missed_calllog =
+
+#Enable or disable the 100 reliable retransmission; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.100rel_enable =
+
+#Enable or disable the "user=phone"; 0-Disabled (default), 1-Enabled;
+account.{{account.id}}.enable_user_equal_phone =
+
+#Enable or disable the simplified header field feature; 0-Disabled, 1-Enabled (default);
+account.{{account.id}}.compact_header_enable =
+
+#######################################################################################
+##                                   DND                                             ##
+#######################################################################################
+account.{{account.id}}.dnd.enable =
+account.{{account.id}}.dnd.on_code =
+account.{{account.id}}.dnd.off_code =
+
+#######################################################################################
+##                                 Call Forward                                      ##
+#######################################################################################
+
+account.{{account.id}}.always_fwd.enable =
+account.{{account.id}}.always_fwd.target =
+account.{{account.id}}.always_fwd.off_code =
+account.{{account.id}}.always_fwd.on_code =
+
+account.{{account.id}}.busy_fwd.enable =
+account.{{account.id}}.busy_fwd.target =
+account.{{account.id}}.busy_fwd.off_code =
+account.{{account.id}}.busy_fwd.on_code =
+
+#Enable or disable the no answer forward feature for account1; 0-Disabled (default), 1-Enabled;
+#Configure the waiting ring times before forwarding. It ranges from 0 to 20, the default value is 2.
+account.{{account.id}}.timeout_fwd.enable =
+account.{{account.id}}.timeout_fwd.target =
+account.{{account.id}}.timeout_fwd.timeout =
+account.{{account.id}}.timeout_fwd.off_code =
+account.{{account.id}}.timeout_fwd.on_code =
+
+#######################################################################################
+##                                 Broadsoft Hoteling                                ##
+#######################################################################################
+account.{{account.id}}.hoteling.enable = 0
+account.{{account.id}}.hoteling.user_id = 0
+account.{{account.id}}.hoteling.password = 0
+account.{{account.id}}.hoteling.auto_login_enable = 0
+
+#######################################################################################
+##                                 Broadsoft ACD                                     ##
+#######################################################################################
+account.{{account.id}}.acd.enable = 0
+account.{{account.id}}.acd.unavailable_reason_enable = 0
+account.{{account.id}}.acd.available = 0
+account.{{account.id}}.acd.initial_state = 1
+
+#######################################################################################
+##                                 Broadsoft ACD Call Center                         ##
+#######################################################################################
+#Configure the ACD reason code of Broadsoft.(The valus of Y must be consecutive numbers.)
+#account.{{account.id}}.bw_acd_reason_code.Y = 500(lunch time)
+account.{{account.id}}.bw_acd_reason_code.1 =
+
+account.{{account.id}}.reason_code.1 =
+account.{{account.id}}.reason_code_name.1 = 0
+account.{{account.id}}.bw_disp_code.1 =
+account.{{account.id}}.bw_disp_code_name.1 =
+account.{{account.id}}.supervisor_info_code.1 =
+account.{{account.id}}.supervisor_info_code_name.1 =
+
+#######################################################################################
+##                                 Broadsoft Call Center                             ##
+#######################################################################################
+account.{{account.id}}.call_center.call_info_enable = 0
+account.{{account.id}}.call_center.show_call_info_time = 30
+account.{{account.id}}.call_center.disp_code_enable = 0
+account.{{account.id}}.call_center.trace_enable = 0
+account.{{account.id}}.call_center.emergency_enable = 0
+account.{{account.id}}.call_center.queue_status_enable = 0
+account.{{account.id}}.call_center.queue_status_light_enable = 0
+
+#######################################################################################
+##                                 Broadsoft XSI                                     ##
+#######################################################################################
+account.{{account.id}}.xsi.user =
+account.{{account.id}}.xsi.password =
+account.{{account.id}}.xsi.host =
+account.{{account.id}}.xsi.server_type =
+account.{{account.id}}.xsi.port =
+
+#######################################################################################
+##                           End of Account {{account.id}}                           ##
+#######################################################################################
+{{/each}}
+
+
+#######################################################################################
+##                                 Time                                              ##
+#######################################################################################
+#Configure the time zone and time zone name. The time zone ranges from -11 to +12, the default value is +8.
+#local_time.time_zone = +8
+#local_time.time_zone_name = China(Beijing)
+local_time.time_zone = {$yealink_time_zone}
+local_time.time_zone_name = {$yealink_time_zone_name}
+
+
+#######################################################################################
+##                                   NETWORK                                         ##
+#######################################################################################
+
+
+
+
+#######################################################################################
+##                             Line Key                                              ##
+#######################################################################################
+
+#The x of the parameter "linekey.x.line" ranges from 1 to 6.
+#The default value equals to the value of x. For example, the default value of the parameter "linekey.1.line" is 1.
+#linekey.x.lable--Define the label for each line key. Meet-Me Conference "1" or BLF "16" require pick_value.
+
+{{#each dssKeys as |dssKey|}}
+###### Configure Line Key: {{dssKey.id}}
+linekey.{{dssKey.id}}.line = {{#if dssKey.line}}{{$dssKey.line}}{{else}}%NULL%{{/if}}
+linekey.{{dssKey.id}}.value = {{#if dssKey.value}}{{$dssKey.value}}{{else}}%NULL%{{/if}}
+linekey.{{dssKey.id}}.pickup_value = {{#if dssKey.pickup_value}}{{$dssKey.pickup_value}}{{else}}%NULL%{{/if}}
+linekey.{{dssKey.id}}.extension = {{#if dssKey.extension}}{{$dssKey.extension}}{{else}}%NULL%{{/if}}
+linekey.{{dssKey.id}}.type = {{#if dssKey.type}}{{$dssKey.type}}{{else}}%NULL%{{/if}}
+linekey.{{dssKey.id}}.xml_phonebook = {{#if dssKey.xml_phonebook}}{{$dssKey.xml_phonebook}}{{else}}%NULL%{{/if}}
+linekey.{{dssKey.id}}.label = {{#if dssKey.label}}{{$dssKey.label}}{{else}}%NULL%{{/if}}
+###### End of Line Key: {{dssKey.id}}
+
+{{/each}}
+
+
+#######################################################################################
+##                             Memory Key (For T38G only)                            ##
+#######################################################################################
+#X ranges from 1 to 10;
+#memorykey.x.line--Configure the desired line to apply the key feature. It ranges from 0 to 6.
+#The value 0 of the "memorykey.x.line" stands for Auto, it means the first available line.
+#But, when the DSS key is configured as BLF, BLF List, Shared Line, Call Park, Pick Up, ACD or Voice Mail feature, the value 0 stands for line 1.
+#memorykey.x.value--Enter the value of some features. E.g. When configuring the DSS key to be BLF, enter the number of the monitored user.
+#memorykey.x.extension--Enter the pickup code, this parameter is only appilicable to BLF.
+#memorykey.x.type--Assign the desired feature to the memory key.
+#Valid types are:  0-N/A(default for memory key)  1-Conference     2-Forward    3-Transfer      4-Hold        5-DND             6-Redial                        7-Call Return     8-SMS
+#                  9-Call Pickup                  10-Call Park     11-DTMF      12-Voicemail    13-SpeedDial  14-Intercom       15-Line(default for line key)   16-BLF            17-URL
+#                  18-Group Listening             19-Public Hold   20-Private   21-Shared Line  22-XML Group  23-Group Pickup   24-Paging                       25-Record         27-XML Browser
+#                  34-Hot Desking                 35-URL Record    38-LDAP      39-BLF List     40-Prefix     41-Zero-Sp-Touch  42-ACD                          45-Local Group    46-Broadsoft Group
+#memorykey.x.xml_phonebook--Specify the desired remote phonebook/local group/BSFT phonebook for the DSS key. This parameter is only appilicable to the feature XML Group/Local Group/Broadsoft Group.
+#memorykey.x.sub_type =
+
+{{!-- #{foreach $keys["memory"] as $row}
+#Expansion Memory Key {$row.device_key_id}
+memorykey.{$row.device_key_id}.type = {$row.device_key_type}
+memorykey.{$row.device_key_id}.line = {$row.device_key_line}
+memorykey.{$row.device_key_id}.value = {$row.device_key_value}
+memorykey.{$row.device_key_id}.extension = {$row.device_key_extension}
+memorykey.{$row.device_key_id}.label = {$row.device_key_label}
+memorykey.{$row.device_key_id}.xml_phonebook =
+memorykey.{$row.device_key_id}.sub_type =
+{/foreach} --}}
+
+
+##########################################################################################
+##                                  Expansion Module 1                                  ##
+##########################################################################################
+#X ranges from 1 to 16, Y ranges from 1 to 40.
+#expansion_module.x.key.y.type = 37 (Switch by default)
+#expansion_module.x.key.y.line = 0
+#expansion_module.x.key.y.value =
+#expansion_module.x.key.y.extension =
+#expansion_module.x.key.y.label =
+#expansion_module.X.key.Y.xml_phonebook =
+
+{{!-- {foreach $keys["expansion-1"] as $row}
+expansion_module.1.key.{$row.device_key_id}.type = {$row.device_key_type}
+expansion_module.1.key.{$row.device_key_id}.line = {$row.device_key_line}
+expansion_module.1.key.{$row.device_key_id}.value = {$row.device_key_value}
+expansion_module.1.key.{$row.device_key_id}.extension = {$row.device_key_extension}
+expansion_module.1.key.{$row.device_key_id}.label = {$row.device_key_label}
+expansion_module.1.key.{$row.device_key_id}.xml_phonebook =
+{/foreach} --}}
+
+
+##########################################################################################
+##                                  Expansion Module 2                                  ##
+##########################################################################################
+
+{{!-- {foreach $keys["expansion-2"] as $row}
+expansion_module.2.key.{$row.device_key_id}.type = {$row.device_key_type}
+expansion_module.2.key.{$row.device_key_id}.line = {$row.device_key_line}
+expansion_module.2.key.{$row.device_key_id}.value = {$row.device_key_value}
+expansion_module.2.key.{$row.device_key_id}.extension = {$row.device_key_extension}
+expansion_module.2.key.{$row.device_key_id}.label = {$row.device_key_label}
+expansion_module.2.key.{$row.device_key_id}.xml_phonebook =
+{/foreach} --}}
+
+
+##########################################################################################
+##                                  Expansion Module 3                                  ##
+##########################################################################################
+
+{{!-- {foreach $keys["expansion-3"] as $row}
+expansion_module.3.key.{$row.device_key_id}.type = {$row.device_key_type}
+expansion_module.3.key.{$row.device_key_id}.line = {$row.device_key_line}
+expansion_module.3.key.{$row.device_key_id}.value = {$row.device_key_value}
+expansion_module.3.key.{$row.device_key_id}.extension = {$row.device_key_extension}
+expansion_module.3.key.{$row.device_key_id}.label = {$row.device_key_label}
+expansion_module.3.key.{$row.device_key_id}.xml_phonebook =
+{/foreach} --}}
+
+
+##########################################################################################
+##                                  Expansion Module 4                                  ##
+##########################################################################################
+
+{{!-- {foreach $keys["expansion-4"] as $row}
+expansion_module.4.key.{$row.device_key_id}.type = {$row.device_key_type}
+expansion_module.4.key.{$row.device_key_id}.line = {$row.device_key_line}
+expansion_module.4.key.{$row.device_key_id}.value = {$row.device_key_value}
+expansion_module.4.key.{$row.device_key_id}.extension = {$row.device_key_extension}
+expansion_module.4.key.{$row.device_key_id}.label = {$row.device_key_label}
+expansion_module.4.key.{$row.device_key_id}.xml_phonebook =
+{/foreach} --}}
+
+
+##########################################################################################
+##                                  Expansion Module 5                                  ##
+##########################################################################################
+
+{{!-- {foreach $keys["expansion-5"] as $row}
+expansion_module.5.key.{$row.device_key_id}.type = {$row.device_key_type}
+expansion_module.5.key.{$row.device_key_id}.line = {$row.device_key_line}
+expansion_module.5.key.{$row.device_key_id}.value = {$row.device_key_value}
+expansion_module.5.key.{$row.device_key_id}.extension = {$row.device_key_extension}
+expansion_module.5.key.{$row.device_key_id}.label = {$row.device_key_label}
+expansion_module.5.key.{$row.device_key_id}.xml_phonebook =
+{/foreach} --}}
+
+
+##########################################################################################
+##                                  Expansion Module 6                                  ##
+##########################################################################################
+
+{{!-- {foreach $keys["expansion-6"] as $row}
+expansion_module.6.key.{$row.device_key_id}.type = {$row.device_key_type}
+expansion_module.6.key.{$row.device_key_id}.line = {$row.device_key_line}
+expansion_module.6.key.{$row.device_key_id}.value = {$row.device_key_value}
+expansion_module.6.key.{$row.device_key_id}.extension = {$row.device_key_extension}
+expansion_module.6.key.{$row.device_key_id}.label = {$row.device_key_label}
+expansion_module.6.key.{$row.device_key_id}.xml_phonebook =
+{/foreach} --}}

@@ -15,7 +15,7 @@ module.exports.parse = userAgent => {
     return {
       deviceModel: yealinkMatch[1],
       firmwareVersion: yealinkMatch[2],
-      macAddress: formatters.formatMacAddress(yealinkMatch[3])
+      macAddress: yealinkMatch[3]
     }
   }
 

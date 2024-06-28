@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "pm2 src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js --config nodemon.json"
   },
   "author": "Alan Spurlock <aspurlock@sipharmony.com> (https://sipharmony.com)",
   "license": "MIT",
@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "axe": "^12.2.7",
+    "axios": "^1.7.2",
     "cabin": "^13.2.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

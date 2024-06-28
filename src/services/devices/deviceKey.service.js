@@ -12,6 +12,17 @@ module.exports.getDeviceKey = async tenantUuid => {
 }
 
 /**
+ * Get the device key by device key
+ * @param {*} deviceKey
+ * @returns
+ */
+module.exports.getDeviceKeyByDeviceKey = async deviceKey => {
+  return await DeviceKey.findOne({
+    deviceKey
+  })
+}
+
+/**
  * Create a new device key
  * @param {*} tenantUuid
  * @param {*} deviceKey
