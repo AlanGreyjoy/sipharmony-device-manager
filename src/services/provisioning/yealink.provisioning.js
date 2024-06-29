@@ -21,7 +21,63 @@ module.exports = async (device, requestedFile, tenantUuid) => {
     return generateMacConfig(requestedFile, device, tenantUuid)
   }
 
-  throw new Error('Unsupported file requested')
+  if (requestedFile === 'y000000000000.cfg') {
+    return generateCommonBoot(formatters.formatMacAddress(device.macAddress))
+  }
+
+  if (requestedFile === formatters.formatMacAddress(device.macAddress) + '.boot') {
+    return generateMacBoot(formatters.formatMacAddress(device.macAddress))
+  }
+
+  return null
+}
+
+/**
+ *
+ * @param {*} mac
+ * @returns
+ */
+async function generateCommonBoot(mac) {
+  logger.info(`Generating common boot file for Yealink devices`)
+
+  const commonBoot = await fs.readFileSync(
+    path.resolve(__dirname, `../../services/templates/yealink/commonBoot.hbs`),
+    'utf8'
+  )
+
+  const commonTemplate = handlebars.compile(commonBoot)
+
+  const generatedBoot = commonTemplate({
+    mac: mac
+  })
+
+  const buffer = Buffer.from(generatedBoot, 'utf8')
+
+  return buffer
+}
+
+/**
+ * Generate MAC boot file for Yealink devices
+ * @param {*} mac
+ * @returns
+ */
+async function generateMacBoot(mac) {
+  logger.info(`Generating MAC boot file for Yealink devices`)
+
+  const macBoot = await fs.readFileSync(
+    path.resolve(__dirname, `../../services/templates/yealink/macBoot.hbs`),
+    'utf8'
+  )
+
+  const macTemplate = handlebars.compile(macBoot)
+
+  const generatedBoot = macTemplate({
+    mac: mac
+  })
+
+  const buffer = Buffer.from(generatedBoot, 'utf8')
+
+  return buffer
 }
 
 /**

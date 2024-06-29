@@ -28,6 +28,7 @@
     "handlebars": "^4.7.8",
     "helmet": "^7.1.0",
     "http": "^0.0.1-security",
+    "joi": "^17.13.3",
     "mongoose": "^8.4.4",
     "request-received": "^0.0.3",
     "response-time": "^2.3.2",
