@@ -7,16 +7,19 @@ const DeviceSettingsSchema = new Schema(
       type: String,
       required: true
     },
+    vendor: {
+      type: String,
+      required: true
+    },
     userId: {
       type: String,
-      required: false,
       default: null
     },
     deviceId: {
       type: String,
-      required: true
+      default: null
     },
-    key: {
+    setting: {
       type: Object,
       required: true
     },
