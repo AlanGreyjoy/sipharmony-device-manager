@@ -12,6 +12,10 @@ const routes = [
   {
     path: '/device-settings',
     route: require('./deviceSettings/deviceSettings.routes')
+  },
+  {
+    path: '/rps',
+    route: require('./rps/rps.routes')
   }
 ]
 
