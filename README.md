@@ -17,6 +17,10 @@ This provisioning server will not have a frontend, but will be accessible via RE
 - Device backup and restore
 - Device logs
 
+## API Documentation
+
+We love using Stoplight.io for our api documentation and we know you will too! You can visit the API documentation [here](https://sipharmony.stoplight.io/docs/sipharmony-device-manager)
+
 ## Supported Devices
 
 - Aastra
@@ -54,6 +58,8 @@ Installation is easy! Just follow the steps below.
 
 - Your wazo-platform must be installed and running.
 - Local dev server, preferably using NGROK for local tunneling/testing
+- For production, the repo is setup to use PM2 for process management. You can use any process manager you like.
+- For local development, you can use `npm run dev` to start the server using nodemon.
 
 ```bash
 Coming soon
@@ -85,11 +91,3 @@ dev-master-api-password=
 YEALINK_YMCS_ACCESS_KEY=
 YEALINK_YMCS_ACCESS_KEY_SECRET=
 ```
-
-### Current Routes
-
-A proper swagger documentation will be added soon. For now, here are the current routes:
-
-- `/devices`
-- `/device-keys`
-- `/device-settings`
