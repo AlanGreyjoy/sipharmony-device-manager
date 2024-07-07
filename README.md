@@ -15,7 +15,7 @@ This provisioning server will not have a frontend, but will be accessible via RE
 - [x] Device configuration
 - [ ] Device firmware upgrade
 - [ ] Device backup and restore
-- [x} Device logs
+- [x] Device logs
 
 ## API Documentation
 
