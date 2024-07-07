@@ -1,14 +1,14 @@
 module.exports = async (req, res, next) => {
-  const token = req.headers['x-auth-token']
+  const apiKey = req.headers['x-auth-key']
 
-  if (!token) {
+  if (!apiKey) {
     return res.status(401).send('Unauthorized, missing token')
   }
 
   //todo: replace and implement your own token validation logic. This is NOT secure nor recommended.
-  if (token !== process.env.API_TOKEN) {
+  if (apiKey !== process.env.API_KEY) {
     return res.status(401).send({
-      message: 'Unauthorized, invalid token'
+      message: 'Unauthorized, invalid api key'
     })
   }
 

@@ -72,6 +72,10 @@ This are the required environment variables that you need to set in your `.env` 
 ```bash
 PORT=
 
+# API KEY
+# This is the API key that will be used to authenticate the requests to the server
+API_KEY=
+
 # SIP Server Configuration
 # This is the SIP server that the devices will connect to
 # Please don't be silly and use and IP address. Use a FQDN or subdomain instead!
