@@ -8,14 +8,14 @@ This provisioning server will not have a frontend, but will be accessible via RE
 
 ## Features
 
-- Provision devices with any subdomain and/or FQDN + `/provisioning/{deviceKey}` endpoint
-- Device provisioning
-- Device management
-- Device monitoring
-- Device configuration
-- Device firmware upgrade
-- Device backup and restore
-- Device logs
+- [x] Provision devices with any subdomain and/or FQDN + `/provisioning/{deviceKey}` endpoint
+- [x] Device provisioning
+- [x] Device management
+- [ ] Device monitoring
+- [x] Device configuration
+- [ ] Device firmware upgrade
+- [ ] Device backup and restore
+- [x} Device logs
 
 ## API Documentation
 
@@ -23,32 +23,32 @@ We love using Stoplight.io for our api documentation and we know you will too! Y
 
 ## Supported Devices
 
-- Aastra
-- Algo
-- Atcom
-- Cisco
-- Digium
-- Escene
-- Fanvil
-- Flyingvoice
-- Grandstream
-- Htek
-- Linksys
-- Linphone
-- Mitel
-- Obihai
-- Panasonic
-- Poly
-- Polycom
-- Sangoma
-- Snom
-- Spectralink
-- Swissvoice
-- Telekonnectors
-- Vtech
-- Yealink
-- Yeastar
-- Zoiper
+- [ ] Aastra
+- [ ] Algo
+- [ ] Atcom
+- [ ] Cisco
+- [ ] Digium
+- [ ] Escene
+- [ ] Fanvil
+- [ ] Flyingvoice
+- [ ] Grandstream
+- [ ] Htek
+- [ ] Linksys
+- [ ] Linphone
+- [ ] Mitel
+- [ ] Obihai
+- [ ] Panasonic
+- [ ] Poly
+- [ ] Polycom
+- [ ] Sangoma
+- [ ] Snom
+- [ ] Spectralink
+- [ ] Swissvoice
+- [ ] Telekonnectors
+- [ ] Vtech
+- [x] Yealink
+- [ ] Yeastar
+- [ ] Zoiper
 
 ## Installation
 
@@ -62,10 +62,12 @@ Installation is easy! Just follow the steps below.
 - For local development, you can use `npm run dev` to start the server using nodemon.
 
 ```bash
-Coming soon
+npm i && npm run dev
 ```
 
 ### ENV Variables
+
+This are the required environment variables that you need to set in your `.env` file.
 
 ```bash
 PORT=
@@ -90,4 +92,20 @@ dev-master-api-password=
 # This is the Yealink YMCS API information. You can get this information from the Yealink YMCS API documentation.
 YEALINK_YMCS_ACCESS_KEY=
 YEALINK_YMCS_ACCESS_KEY_SECRET=
+```
+
+## Running in dev
+
+Dev environment uses nodemon for hot reloading.
+
+```bash
+npm run dev
+```
+
+## Running in production
+
+Production environment uses PM2 for process management. For a typical CI/CD pipeline, I would recommend using a Docker container.
+
+```bash
+npm run start
 ```
