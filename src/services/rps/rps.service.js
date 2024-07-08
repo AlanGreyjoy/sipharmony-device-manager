@@ -2,14 +2,25 @@ const logger = require('../../utils/logger')
 const RpsAccount = require('../../models/RpsAccount')
 
 /**
- * Get all RPS accounts
- * @param {*} tenantUuid
+ * Get RPS accounts
+ * @param {*} query
  * @returns
  */
-module.exports.getAllRpsAccounts = async tenantUuid => {
-  logger.info(`Getting all RPS accounts for tenant: <${tenantUuid}>`)
+module.exports.getRpsAccounts = async query => {
+  logger.info('Getting RPS accounts')
+  logger.debug(JSON.stringify(query))
 
-  const rpsAccounts = await RpsAccount.find({ tenantUuid })
+  const searchParams = {}
+
+  if (query.tenantUuid) {
+    searchParams.tenantUuid = query.tenantUuid
+  }
+
+  if (query.rpsType) {
+    searchParams.rpsType = query.rpsType
+  }
+
+  const rpsAccounts = await RpsAccount.find(searchParams)
 
   return rpsAccounts
 }

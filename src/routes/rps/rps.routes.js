@@ -9,5 +9,8 @@ router.post('/', auth, rpsController.action)
 
 router.get('/accounts', auth, rpsController.getRpsAccounts)
 router.post('/accounts', auth, validation(rpsAccountValidation), rpsController.addRpsAccount)
+router.get('/accounts/:id', auth, rpsController.getRpsAccount)
+router.put('/accounts/:id', auth, validation(rpsAccountValidation), rpsController.updateRpsAccount)
+router.delete('/accounts/:id', auth, rpsController.deleteRpsAccount)
 
 module.exports = router
