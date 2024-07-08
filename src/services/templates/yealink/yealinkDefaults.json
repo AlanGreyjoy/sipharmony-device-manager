@@ -1,0 +1,14 @@
+{
+  "actionUrls": {
+    "setupCompleteEnabled": false,
+    "setupCompleteUrl": "",
+    "registerEnabled": false,
+    "registerUrl": "",
+    "unregisterEnabled": false,
+    "unregisterUrl": "",
+    "openDndEnabled": false,
+    "openDndUrl": "",
+    "closeDndEnabled": false,
+    "closeDndUrl": ""
+  }
+}

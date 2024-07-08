@@ -9,7 +9,7 @@ const logger = require('../utils/logger')
  * @returns
  */
 module.exports.createDeviceKey = async (req, res) => {
-  const { tenantUuid } = req.body
+  const { tenantUuid, key, rps } = req.body
 
   if (!tenantUuid) {
     logger.error('Tenant UUID was not provided!')
@@ -23,7 +23,7 @@ module.exports.createDeviceKey = async (req, res) => {
     return res.status(403).send({ message: 'Device key already exists!' })
   }
 
-  const deviceKey = generators.generateRandomString()
+  const deviceKey = key || generators.generateRandomString()
 
   await deviceKeyService.createDeviceKey(tenantUuid, deviceKey)
 
@@ -91,7 +91,7 @@ module.exports.deleteDeviceKey = async (req, res) => {
  * @returns
  */
 module.exports.updateDeviceKey = async (req, res) => {
-  const { tenantUuid } = req.body
+  const { tenantUuid, key, rps } = req.body
 
   if (!tenantUuid) {
     logger.error('Tenant UUID was not provided!')
@@ -105,7 +105,7 @@ module.exports.updateDeviceKey = async (req, res) => {
     return res.status(404).send({ message: 'Device key not found!' })
   }
 
-  const newDeviceKey = generators.generateRandomString()
+  const newDeviceKey = key || generators.generateRandomString()
 
   await deviceKeyService.updateDeviceKey(tenantUuid, newDeviceKey)
 
