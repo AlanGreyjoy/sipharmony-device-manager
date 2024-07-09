@@ -25,10 +25,9 @@ module.exports.getRpsAccounts = async (req, res) => {
  * @returns
  */
 module.exports.addRpsAccount = async (req, res) => {
-  const { tenantUuid } = req
-  const { account } = req.body
+  const account = req.body
 
-  const newRpsAccount = await rpsService.addRpsAccount(tenantUuid, account)
+  const newRpsAccount = await rpsService.addRpsAccount(account.tenantUuid, account)
 
   return res.status(201).json(newRpsAccount)
 }

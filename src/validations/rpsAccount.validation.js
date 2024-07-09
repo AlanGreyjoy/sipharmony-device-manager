@@ -8,8 +8,8 @@ module.exports = {
     rpsType: Joi.string()
       .valid(...rpsWhitelist)
       .required(),
-    id: Joi.string().allow(null),
     serverName: Joi.string().allow(null),
-    url: Joi.string().required()
+    url: Joi.string().required(),
+    deviceKey: Joi.string().required()
   })
 }

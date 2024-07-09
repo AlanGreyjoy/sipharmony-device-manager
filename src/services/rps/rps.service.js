@@ -1,5 +1,6 @@
 const logger = require('../../utils/logger')
 const RpsAccount = require('../../models/RpsAccount')
+const yealinkRps = require('../provisioning/yealinkRps/yealinkRps')
 
 /**
  * Get RPS accounts
@@ -33,11 +34,27 @@ module.exports.getRpsAccounts = async query => {
 module.exports.addRpsAccount = async (tenantUuid, account) => {
   logger.info(`Adding RPS account for tenant: <${tenantUuid}>`)
 
-  const newRpsAccount = new RpsAccount({ ...account, tenantUuid })
+  switch (account.rpsType) {
+    case 'yealink':
+      logger.info('Adding Yealink RPS account')
 
-  await newRpsAccount.save()
+      const yealinkRpsServer = await yealinkRps.createServer(account.serverName, account.url)
 
-  return newRpsAccount
+      const newRpsAccount = new RpsAccount({
+        tenantUuid,
+        rpsType: account.rpsType,
+        serverName: account.serverName,
+        url: account.url,
+        id: yealinkRpsServer.id
+      })
+
+      await newRpsAccount.save()
+
+      return newRpsAccount
+
+    default:
+      throw new Error('Invalid rpsType')
+  }
 }
 
 /**
@@ -73,7 +90,15 @@ module.exports.updateRpsAccount = async (id, account) => {
 module.exports.deleteRpsAccount = async id => {
   logger.info(`Deleting RPS account: <${id}>`)
 
+  const rpsAccount = await RpsAccount.findById(id)
+
+  if (!rpsAccount) {
+    throw new Error('RPS account not found')
+  }
+
   await RpsAccount.findByIdAndDelete(id)
+
+  await yealinkRps.deleteServer(rpsAccount.id)
 
   return true
 }
