@@ -18,6 +18,7 @@
     "manager"
   ],
   "dependencies": {
+    "asterisk-manager": "^0.2.0",
     "axe": "^12.2.7",
     "axios": "^1.7.2",
     "cabin": "^13.2.7",

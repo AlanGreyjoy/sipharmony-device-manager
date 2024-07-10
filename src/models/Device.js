@@ -12,17 +12,25 @@ const DeviceSchema = new Schema(
       type: String,
       required: true
     },
+    userUuid: {
+      type: String,
+      default: null
+    },
     vendor: {
       type: String,
       required: true
     },
     model: {
       type: String,
-      required: true
+      default: null
     },
-    mac: {
+    macAddress: {
       type: String,
       required: true
+    },
+    firmware: {
+      type: String,
+      default: null
     },
     rpsBound: {
       type: Boolean,
@@ -39,6 +47,18 @@ const DeviceSchema = new Schema(
     room: {
       type: String,
       default: null
+    },
+    transport: {
+      type: String,
+      default: 'tls'
+    },
+    port: {
+      type: Number,
+      default: '5061'
+    },
+    expires: {
+      type: Number,
+      default: '3600'
     }
   },
   { timestamps: true }

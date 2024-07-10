@@ -4,6 +4,7 @@ const formatters = require('../../utils/formatters')
 const logger = require('../../utils/logger')
 const wazoService = require('../wazo/wazo.service')
 const handlebars = require('handlebars')
+const deviceService = require('../devices/device.service')
 
 /**
  * Provision Yealink device
@@ -13,6 +14,8 @@ const handlebars = require('handlebars')
  * @returns
  */
 module.exports = async (device, requestedFile, tenantUuid) => {
+  logger.info(`Provisioning Yealink device with MAC address: ${device.macAddress}`)
+
   if (requestedFile === 'y000000000066.cfg') {
     return generateCommonConfig(requestedFile, device)
   }
@@ -118,6 +121,7 @@ async function generateCommonConfig(requestedFile, device) {
  */
 async function generateMacConfig(requestedFile, device, tenantUuid) {
   logger.info(`Generating ${requestedFile} for device with MAC address: ${device.macAddress}`)
+  console.log('device', device)
 
   const macConfig = await fs.readFileSync(
     path.resolve(__dirname, `../../services/templates/yealink/macConfig.hbs`),
@@ -126,132 +130,98 @@ async function generateMacConfig(requestedFile, device, tenantUuid) {
 
   const macTemplate = handlebars.compile(macConfig)
 
-  const devices = await wazoService.confd.devices.getDevices(tenantUuid)
+  const getDevice = await deviceService.getDeviceByMac(device.macAddress)
 
-  if (devices.items.length === 0) {
-    logger.error('No devices found in Wazo-Platform!')
-    throw new Error('No devices found in Wazo-Platform!')
+  console.log('getDevice', getDevice)
+
+  if (!getDevice) {
+    logger.error(`Device with MAC address: ${device.macAddress} not found!`)
+
+    throw new Error(`Device with MAC address: ${device.macAddress} not found!`)
   }
 
-  const wazoDevice = devices.items.find(d => d.mac === device.macAddress)
+  if (!getDevice.tenantUuid) {
+    logger.error(`Tenant UUID not found for device with MAC address: ${device.macAddress}`)
 
-  if (!wazoDevice) {
-    logger.error('Device not found in Wazo-Platform!')
-    throw new Error('Device not found in Wazo-Platform!')
+    throw new Error(`Tenant UUID not found for device with MAC address: ${device.macAddress}`)
+  }
+
+  if (!getDevice.userUuid) {
+    logger.error(`User UUID not found for device with MAC address: ${device.macAddress}`)
+
+    throw new Error(`User UUID not found for device with MAC address: ${device.macAddress}`)
   }
 
   const lines = await wazoService.confd.lines.getLines(tenantUuid)
 
   if (lines.items.length === 0) {
     logger.error('No lines found in Wazo-Platform!')
+
     throw new Error('No lines found in Wazo-Platform!')
   }
 
   const userOptions = {}
 
-  /**
-   * HUGE TODO: Refactor and code split. This is just a quick and dirty implementation to get the POC completed.
-   */
-
   if (lines.items.length > 0) {
     for (const line of lines.items) {
       if (line.users.length === 0) continue
+      if (!line.users.find(user => user.uuid === getDevice.userUuid)) continue
 
-      if (line.device_id) {
-        const getDevice = await wazoService.confd.devices.getDevice(tenantUuid, line.device_id)
+      const user = line.users.find(user => user.uuid === getDevice.userUuid)
 
-        if (getDevice.mac !== device.macAddress) {
-          continue
-        }
+      console.log('user', user)
 
-        const mainEndpoint = await wazoService.confd.endpoints.getSipEndpoint(
-          tenantUuid,
-          line.endpoint_sip.uuid
-        )
+      if (!user) continue
 
-        console.log('mainEndpoint', mainEndpoint)
+      const sipEndpoint = await wazoService.confd.lines.getSipEndpointOfMainLineForAUser(
+        tenantUuid,
+        user.uuid
+      )
 
-        const transport = await wazoService.confd.transports.getTransport(
-          tenantUuid,
-          mainEndpoint.transport.uuid
-        )
+      if (!sipEndpoint) continue
 
-        const getTransport = () => {
-          for (const option of transport.options) {
-            if (option[0] === 'protocol') {
-              return option[1]
-            }
-          }
-          return null
-        }
+      console.log('sipEndpoint', sipEndpoint)
 
-        const getSipUsername = () => {
-          for (const option of mainEndpoint.auth_section_options) {
-            if (option[0] === 'username') {
-              return option[1]
-            }
-          }
+      const sipUser = sipEndpoint.auth_section_options[0][1]
+      const sipPassword = sipEndpoint.auth_section_options[1][1]
 
-          return null
-        }
+      if (!sipUser || !sipPassword) continue
 
-        const getSipPassword = () => {
-          for (const option of mainEndpoint.auth_section_options) {
-            if (option[0] === 'password') {
-              return option[1]
-            }
-          }
-
-          return null
-        }
-
-        const getSipServerPort = userOptions => {
-          const transport = userOptions.sipTransport
-
-          if (transport === 'tls') return 5061
-          if (transport === 'tcp') return 5061
-
-          return 5060
-        }
-
-        const user = await wazoService.confd.users.getUser(tenantUuid, line.users[0].uuid)
-
-        userOptions.enable = true
-        userOptions.sipUserName = getSipUsername()
-        userOptions.sipPassword = getSipPassword()
-        userOptions.sipTransport = getTransport()
-        userOptions.sipServer = process.env.SIP_SERVER_HOST
-        userOptions.sipServerPort = getSipServerPort(userOptions)
-
-        const macConfig = macTemplate({
-          accounts: [
-            {
-              id: 1,
-              enable: 1,
-              label: `${user.firstname} ${user.lastname || ''}`,
-              display_name: `${user.firstname} ${user.lastname || ''}`,
-              auth_name: userOptions.sipUserName,
-              user_name: userOptions.sipUserName,
-              password: userOptions.sipPassword,
-              server_address: userOptions.sipServer,
-              sip_port: userOptions.sipServerPort,
-              sip_transport:
-                userOptions.sipTransport === 'tls'
-                  ? '2'
-                  : userOptions.sipTransport === 'tcp'
-                    ? '1'
-                    : '0',
-              register_expires: userOptions.sipTransport === 'tls' ? 120 : 60,
-              retry_counts: 5,
-              yealink_srtp_encryption: userOptions.sipTransport === 'tls' ? '1' : '0'
-            }
-          ]
-        })
-
-        const buffer = Buffer.from(macConfig, 'utf8')
-
-        return buffer
-      }
+      userOptions.user = { ...user }
+      userOptions.callerId = sipEndpoint.endpoint_section_options[0][1]
+      userOptions.sipUser = sipUser
+      userOptions.sipPassword = sipPassword
     }
   }
+
+  const generatedConfig = macTemplate({
+    accounts: [
+      {
+        id: 1,
+        enable: true,
+        label: `${userOptions.user.firstname} ${userOptions.user.lastname || ''}`, // Label is the LCD screen
+        display_name: userOptions.callerId, // Display name is the caller ID
+        auth_name: userOptions.sipUser,
+        user_name: userOptions.sipUser,
+        password: userOptions.sipPassword,
+        server_address: `devices.sipharmony.com`,
+        sip_port: getDevice.port,
+        sip_transport: getDevice.transport === 'udp' ? 0 : device.transport === 'tcp' ? 1 : 2,
+        register_expires: getDevice.expires,
+        retry_counts: 3,
+        yealink_srtp_encryption: getDevice.transport === 'tls' ? 1 : 0
+      }
+    ]
+  })
+
+  const buffer = Buffer.from(generatedConfig, 'utf8')
+
+  //Update device with model information
+  await deviceService.updateDeviceModelAndFirmware(
+    getDevice._id,
+    device.deviceModel,
+    device.firmwareVersion
+  )
+
+  return buffer
 }

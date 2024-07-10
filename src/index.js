@@ -3,6 +3,8 @@ const server = require('./app')
 const logger = require('./utils/logger')
 const mongooseService = require('./services/mongoose/mongoose.service')
 
+require('./services/asterisk/asterisk')
+
 init()
 
 async function init() {

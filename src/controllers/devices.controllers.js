@@ -1,7 +1,9 @@
-const deviceService = require('../services/devices/deviceKey.service')
 const userAgentParser = require('../utils/userAgentParser')
 const logger = require('../utils/logger')
 const provisionService = require('../services/provisioning/provisioning.service')
+const rpsService = require('../services/rps/rps.service')
+const deviceService = require('../services/devices/device.service')
+const deviceKeyService = require('../services/devices/deviceKey.service')
 
 /**
  * Get device files
@@ -12,27 +14,19 @@ const provisionService = require('../services/provisioning/provisioning.service'
 module.exports.getFile = async (req, res) => {
   const { deviceKey, fileName } = req.params
 
-  if (!deviceKey) {
-    logger.error('Device key was not provided!')
-    return res.status(400).send({ message: 'Device key is required!' })
-  }
-
-  const getDeviceKey = await deviceService.getDeviceKeyByDeviceKey(deviceKey)
+  const getDeviceKey = await deviceKeyService.getDeviceKeyByDeviceKey(deviceKey)
 
   if (!getDeviceKey) {
     logger.error(`Invalid device key: <${deviceKey}> Device key does not exist in the database.`)
-    return res.status(403).send({ message: 'Invalid device key!' })
-  }
 
-  if (!fileName) {
-    logger.error('File name was not provided!')
-    return res.status(400).send({ message: 'File name is required!' })
+    return res.status(403).send({ message: 'Invalid device key!' })
   }
 
   const userAgent = userAgentParser.parse(req.headers['user-agent'])
 
   if (!userAgent) {
     logger.error('User agent was not provided by the calling device!')
+
     return res.status(400).send({ message: 'User agent is required!' })
   }
 
@@ -64,4 +58,94 @@ module.exports.getFile = async (req, res) => {
 
   // Send the buffer
   return res.send(configFile)
+}
+
+/**
+ * Create a new device
+ * @param {*} req
+ * @param {*} res
+ */
+module.exports.createDevice = async (req, res) => {
+  const device = req.body
+
+  const deviceExists = await deviceService.getDeviceByMac(device.macAddress)
+
+  if (deviceExists) {
+    return res.status(403).json({ message: 'Device already exists!' })
+  }
+
+  const rpsAccounts = await rpsService.getRpsAccounts({
+    tenantUuid: device.tenantUuid
+  })
+
+  const hasRpsAccount = rpsAccounts.find(account => account.rpsType === device.vendor)
+
+  if (hasRpsAccount) {
+    device.rpsBound = true
+
+    await rpsService.addDeviceToRps(
+      {
+        serverId: hasRpsAccount.id
+      },
+      device
+    )
+  }
+
+  const newDevice = await deviceService.createDevice(device)
+
+  return res.status(200).json(newDevice)
+}
+
+module.exports.getDevice = async (req, res) => {}
+
+/**
+ * Get devices by tenant UUID
+ * @param {*} req
+ * @param {*} res
+ */
+module.exports.getDevices = async (req, res) => {
+  const { tenantUuid } = req.params
+
+  const devices = await deviceService.getDevices({
+    tenantUuid
+  })
+
+  return res.status(200).json(devices || [])
+}
+
+module.exports.updateDevice = async (req, res) => {}
+
+module.exports.deleteDevice = async (req, res) => {}
+
+/**
+ * Assign device to a user
+ * @param {*} req
+ * @param {*} res
+ */
+module.exports.assignDevice = async (req, res) => {
+  const device = req.body
+
+  const updatedDevice = await deviceService.assignDevice(device.userUuid, device._id)
+
+  return res.status(200).json(updatedDevice)
+}
+
+/**
+ * Unassign device from a user
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+module.exports.unassignDevice = async (req, res) => {
+  const { mac } = req.params
+
+  const device = await deviceService.getDeviceByMac(mac)
+
+  if (!device) {
+    return res.status(404).send({ message: 'Device not found!' })
+  }
+
+  const updatedDevice = await deviceService.unassignDevice(device._id)
+
+  return res.status(200).json(updatedDevice)
 }

@@ -102,3 +102,27 @@ module.exports.deleteRpsAccount = async id => {
 
   return true
 }
+
+/**
+ * Add device to RPS
+ * @param {*} args - { serverId }
+ * @param {*} device
+ */
+module.exports.addDeviceToRps = async (args, device) => {
+  const vendor = device.vendor
+
+  switch (vendor) {
+    case 'yealink':
+      await yealinkRps.createDevice(args.serverId, device.macAddress)
+      break
+    default:
+      throw new Error('Unsupported vendor. Cannot add device to an RPS server')
+  }
+}
+
+/**
+ * Delete device from RPS
+ * @param {*} args
+ * @param {*} device
+ */
+module.exports.deleteDeviceFromRps = async (args, device) => {}

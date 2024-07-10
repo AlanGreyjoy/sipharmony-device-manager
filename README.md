@@ -60,6 +60,7 @@ Installation is easy! Just follow the steps below.
 - Local dev server, preferably using NGROK for local tunneling/testing
 - For production, the repo is setup to use PM2 for process management. You can use any process manager you like.
 - For local development, you can use `npm run dev` to start the server using nodemon.
+- AMI access to your Asterisk server. This is required to get the device information and realtime updates.
 
 ```bash
 npm i && npm run dev
@@ -96,6 +97,13 @@ dev-master-api-password=
 # This is the Yealink YMCS API information. You can get this information from the Yealink YMCS API documentation.
 YEALINK_YMCS_ACCESS_KEY=
 YEALINK_YMCS_ACCESS_KEY_SECRET=
+
+## Asterisk AMI
+## This will connect to the remote Asterisk AMI to get the device information and realtime updates
+AMI_PORT=
+AMI_USERNAME=
+AMI_PASSWORD=
+AMI_HOST=
 ```
 
 ## Running in dev
