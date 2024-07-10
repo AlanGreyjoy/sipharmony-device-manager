@@ -113,7 +113,21 @@ module.exports.getDevices = async (req, res) => {
   return res.status(200).json(devices || [])
 }
 
-module.exports.updateDevice = async (req, res) => {}
+/**
+ * Update device
+ * @param {*} req
+ * @param {*} res
+ */
+module.exports.updateDevice = async (req, res) => {
+  const { id } = req.params
+  const device = req.body
+
+  console.log('device', device)
+
+  const updatedDevice = await deviceService.updateDevice(id, device)
+
+  return res.status(200).json(updatedDevice)
+}
 
 module.exports.deleteDevice = async (req, res) => {}
 

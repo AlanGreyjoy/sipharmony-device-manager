@@ -50,15 +50,15 @@ const DeviceSchema = new Schema(
     },
     transport: {
       type: String,
-      default: 'tls'
+      default: 'udp'
     },
     port: {
       type: Number,
-      default: '5061'
+      default: '5060'
     },
     expires: {
       type: Number,
-      default: '3600'
+      default: '120'
     }
   },
   { timestamps: true }

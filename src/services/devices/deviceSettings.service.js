@@ -34,3 +34,13 @@ module.exports.updateDeviceSetting = async (vendor, tenantUuid, setting, value) 
 
   throw new Error('Unsupported vendor')
 }
+
+/**
+ * Get all device settings
+ * @param {*} vendor
+ * @param {*} tenantUuid
+ * @returns
+ */
+module.exports.getDeviceSettings = async (vendor, tenantUuid) => {
+  return await DeviceSetting.find({ tenantUuid, vendor })
+}

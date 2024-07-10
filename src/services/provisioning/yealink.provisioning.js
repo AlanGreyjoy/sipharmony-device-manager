@@ -5,6 +5,8 @@ const logger = require('../../utils/logger')
 const wazoService = require('../wazo/wazo.service')
 const handlebars = require('handlebars')
 const deviceService = require('../devices/device.service')
+const rpsService = require('../rps/rps.service')
+const deviceSettingsService = require('../devices/deviceSettings.service')
 
 /**
  * Provision Yealink device
@@ -92,6 +94,8 @@ async function generateMacBoot(mac) {
 async function generateCommonConfig(requestedFile, device) {
   logger.info(`Generating ${requestedFile} for device with MAC address: ${device.macAddress}`)
 
+  console.log('device', device)
+
   const commonConfig = await fs.readFileSync(
     path.resolve(__dirname, `../../services/templates/yealink/commonConfig.hbs`),
     'utf8'
@@ -99,12 +103,48 @@ async function generateCommonConfig(requestedFile, device) {
 
   const commonTemplate = handlebars.compile(commonConfig)
 
-  const generatedConfig = commonTemplate({
+  const getDevice = await deviceService.getDeviceByMac(device.macAddress)
+
+  const templateOptions = {
     yealink_dhcp_time: 1,
     yealink_time_format: 0,
     yealink_date_format: 4,
     yealink_summer_time: 1,
     yealink_time_zone: -6
+  }
+
+  if (getDevice) {
+    if (getDevice.rpsBound) {
+      const rpsAccounts = await rpsService.getRpsAccounts({
+        tenantUuid: getDevice.tenantUuid,
+        rpsType: 'yealink'
+      })
+
+      console.log('rpsAccounts', rpsAccounts)
+
+      if (rpsAccounts.length > 0) {
+        const rpsAccount = rpsAccounts[0]
+        templateOptions.yealink_provision_url = rpsAccount.url
+      }
+    }
+
+    const deviceSettings = await deviceSettingsService.getDeviceSettings(
+      'yealink',
+      getDevice.tenantUuid
+    )
+
+    console.log('deviceSettings', deviceSettings)
+
+    for (const setting of deviceSettings) {
+      if (setting.deviceId) continue
+      if (setting.userId) continue
+
+      templateOptions[setting.setting] = setting.value
+    }
+  }
+
+  const generatedConfig = commonTemplate({
+    ...templateOptions
   })
 
   const buffer = Buffer.from(generatedConfig, 'utf8')
@@ -207,9 +247,9 @@ async function generateMacConfig(requestedFile, device, tenantUuid) {
         server_address: `devices.sipharmony.com`,
         sip_port: getDevice.port,
         sip_transport: getDevice.transport === 'udp' ? 0 : device.transport === 'tcp' ? 1 : 2,
-        register_expires: getDevice.expires,
+        register_expires: getDevice.transport === 'udp' ? 60 : 120,
         retry_counts: 3,
-        yealink_srtp_encryption: getDevice.transport === 'tls' ? 1 : 0
+        yealink_srtp_encryption: 2
       }
     ]
   })
