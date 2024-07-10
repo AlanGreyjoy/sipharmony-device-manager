@@ -174,19 +174,15 @@ module.exports.unassignDevice = async (req, res) => {
 module.exports.resyncDevice = async (req, res) => {
   const device = req.body
 
-  console.log('device', device)
-
   const sipEndpoint = await wazoService.confd.lines.getSipEndpointOfMainLineForAUser(
     device.tenantUuid,
     device.userUuid
   )
 
-  console.log('sipEndpoint', sipEndpoint)
-
   if (!sipEndpoint) throw new Error('SIP endpoint not found')
 
   AmiCommands.pjSip.resyncDevice(global.ami, sipEndpoint.name).catch(err => {
-    logger.error('Failed to resync device')
+    logger.error(err)
 
     throw new Error('Failed to resync device')
   })
