@@ -34,3 +34,28 @@ module.exports.showEndpoint = async (ami, endpoint) => {
     )
   })
 }
+
+/**
+ * Send a notify to resync a device/endpoint
+ * @param {*} ami
+ * @param {*} endpoint
+ * @returns
+ */
+module.exports.resyncDevice = async (ami, endpoint) => {
+  return new Promise((resolve, reject) => {
+    ami.action(
+      {
+        action: 'Command',
+        command: 'pjsip send notify check-sync endpoint ' + endpoint
+      },
+      (err, res) => {
+        if (err) {
+          console.error('Command error:', err)
+          reject(err)
+        } else {
+          resolve(res)
+        }
+      }
+    )
+  })
+}

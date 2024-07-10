@@ -1,27 +1,36 @@
 # The Sipharmony Device Manager - A simple auto-provisioning microservice
 
-The Sipharmony Device Manager is a fast and lightweight device and provisioning server for VoIP IP phones. It is designed to be used with the Wazo-Platform.
+The Sipharmony Device Manager is a fast and lightweight device and provisioning server for VoIP IP phones. It is designed to be used with the Wazo-Platform. It's the same server we use for our service!
 
 The device manager and provisioning server will borrow the concept of "Provisioning keys" from the Wazo-Platform. This will allow you to provision devices with a simple URL and a device key. The device manager will then take care of the rest 🥳
 
 This provisioning server will not have a frontend, but will be accessible via REST API. This will allow you to build your own frontend or use Postman to interact with the server. It's recommended to incorporate this server into your own frontend or backend.
 
-## Features
+## 🤔 Why use the Sipharmony Device Manager and not the default Wazo-Platform provisioning server?
+
+The Wazo-Platform provisioning server is great! But it's not designed to handle multiple device settings and configurations. The Sipharmony Device Manager is designed to handle multiple device settings and configurations. It's also designed to be lightweight and fast.
+
+## 🗃️ No saved configurations on the server 🥳
+
+The Sipharmony Device Manager will not save any device configurations on the server. This is to ensure that the server is lightweight and fast. The server will only save the device information and the device logs. This is to ensure that the server is fast and lightweight. Provisioning files are generated on the fly and streamed to the device.
+
+## 🎂 Features
 
 - [x] Provision devices with any subdomain and/or FQDN + `/provisioning/{deviceKey}` endpoint
 - [x] Device provisioning
 - [x] Device management
+- [x] Device resync and reboot commands
 - [ ] Device monitoring
 - [x] Device configuration
 - [ ] Device firmware upgrade
 - [ ] Device backup and restore
 - [x] Device logs
 
-## API Documentation
+## 🍴 API Documentation
 
 We love using Stoplight.io for our api documentation and we know you will too! You can visit the API documentation [here](https://sipharmony.stoplight.io/docs/sipharmony-device-manager)
 
-## Supported Devices
+## ☎️ Supported Devices
 
 - [ ] Aastra
 - [ ] Algo
@@ -50,7 +59,7 @@ We love using Stoplight.io for our api documentation and we know you will too! Y
 - [ ] Yeastar
 - [ ] Zoiper
 
-## Installation
+## 🛠️ Installation
 
 Installation is easy! Just follow the steps below.
 

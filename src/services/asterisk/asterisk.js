@@ -23,6 +23,8 @@ async function connectToAsterisk() {
 
   ami.keepConnected()
 
+  global.ami = ami
+
   ami.on('managerevent', function (evt) {
     switch (evt.event) {
       case 'DeviceStateChange':

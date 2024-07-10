@@ -4,6 +4,8 @@ const provisionService = require('../services/provisioning/provisioning.service'
 const rpsService = require('../services/rps/rps.service')
 const deviceService = require('../services/devices/device.service')
 const deviceKeyService = require('../services/devices/deviceKey.service')
+const wazoService = require('../services/wazo/wazo.service')
+const AmiCommands = require('../services/asterisk/commands/AmiCommands')
 
 /**
  * Get device files
@@ -162,4 +164,32 @@ module.exports.unassignDevice = async (req, res) => {
   const updatedDevice = await deviceService.unassignDevice(device._id)
 
   return res.status(200).json(updatedDevice)
+}
+
+/**
+ * Resync device
+ * @param {*} req
+ * @param {*} res
+ */
+module.exports.resyncDevice = async (req, res) => {
+  const device = req.body
+
+  console.log('device', device)
+
+  const sipEndpoint = await wazoService.confd.lines.getSipEndpointOfMainLineForAUser(
+    device.tenantUuid,
+    device.userUuid
+  )
+
+  console.log('sipEndpoint', sipEndpoint)
+
+  if (!sipEndpoint) throw new Error('SIP endpoint not found')
+
+  AmiCommands.pjSip.resyncDevice(global.ami, sipEndpoint.name).catch(err => {
+    logger.error('Failed to resync device')
+
+    throw new Error('Failed to resync device')
+  })
+
+  return res.status(200).send({ message: 'Resync command sent successfully' })
 }

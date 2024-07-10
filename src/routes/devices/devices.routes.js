@@ -30,6 +30,8 @@ router.get(
   devicesController.getDevices
 )
 
+router.post('/resync', auth, devicesController.resyncDevice)
+
 router.get('/:id', auth, devicesController.getDevice)
 router.put('/:id', auth, devicesController.updateDevice)
 router.delete('/:id', auth, devicesController.deleteDevice)
