@@ -69,6 +69,7 @@ module.exports.getFile = async (req, res) => {
  */
 module.exports.createDevice = async (req, res) => {
   const device = req.body
+  device.macAddress = device.macAddress.toUpperCase()
 
   const deviceExists = await deviceService.getDeviceByMac(device.macAddress)
 

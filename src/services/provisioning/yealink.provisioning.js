@@ -176,7 +176,7 @@ async function generateMacConfig(requestedFile, device, tenantUuid) {
 
   const macTemplate = handlebars.compile(macConfig)
 
-  const getDevice = await deviceService.getDeviceByMac(device.macAddress)
+  const getDevice = await deviceService.getDeviceByMac(device.macAddress.toUpperCase())
 
   console.log('getDevice', getDevice)
 
