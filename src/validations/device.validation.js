@@ -45,7 +45,11 @@ module.exports.assign = {
     createdAt: Joi.date().required(),
     updatedAt: Joi.date().required(),
     __v: Joi.number().required(),
-    firmware: Joi.string().optional().allow(null)
+    firmware: Joi.string().optional().allow(null),
+    endpoint: Joi.string().optional().allow(null),
+    status: Joi.string().optional().allow(null),
+    lastSeen: Joi.date().optional().allow(null),
+    rtt: Joi.number().optional().allow(null)
   })
 }
 
