@@ -18,7 +18,7 @@ const deviceSettingsService = require('../devices/deviceSettings.service')
 module.exports = async (device, requestedFile, tenantUuid) => {
   logger.info(`Provisioning Yealink device with MAC address: ${device.macAddress}`)
 
-  if (requestedFile === 'y000000000066.cfg') {
+  if (/^y00000000.*\.cfg$/.test(requestedFile)) {
     return generateCommonConfig(requestedFile, device)
   }
 
@@ -32,11 +32,11 @@ module.exports = async (device, requestedFile, tenantUuid) => {
     return generateMacConfig(requestedFile, device, tenantUuid)
   }
 
-  if (requestedFile === 'y000000000000.cfg') {
+  if (requestedFile === 'y000000000000.boot') {
     return generateCommonBoot(formatters.formatMacAddress(device.macAddress))
   }
 
-  if (requestedFile === formatters.formatMacAddress(device.macAddress) + '.boot') {
+  if (requestedFile === formatters.formatMacAddress(device.macAddress).toLowerCase() + '.boot') {
     return generateMacBoot(formatters.formatMacAddress(device.macAddress))
   }
 
@@ -98,7 +98,9 @@ async function generateMacBoot(mac) {
  * @returns
  */
 async function generateCommonConfig(requestedFile, device) {
-  logger.info(`Generating ${requestedFile} for device with MAC address: ${device.macAddress}`)
+  logger.info(
+    `Generating common config ${requestedFile} for device with MAC address: ${device.macAddress}`
+  )
 
   console.log('device', device)
 
