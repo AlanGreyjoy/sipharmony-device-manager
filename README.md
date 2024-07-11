@@ -115,6 +115,21 @@ AMI_PASSWORD=
 AMI_HOST=
 ```
 
+### Wazo-Platform Adjustments
+
+You will need to adjust the Wazo-Platform to use the Sipharmony Device Manager. You can do this by following the steps below.
+
+- **Add [general-reboot] sip notify command to the Wazo-Platform**
+
+```bash
+    ...
+    ;This file is found at /etc/asterisk/sip_notify.d/01-wazo.conf
+    ; Generic reboot command
+    [general-reboot]
+    Event=>check-sync\;reboot=true
+    ...
+```
+
 ## Running in dev
 
 Dev environment uses nodemon for hot reloading.

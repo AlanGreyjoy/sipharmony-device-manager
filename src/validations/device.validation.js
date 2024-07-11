@@ -2,13 +2,15 @@ const Joi = require('joi')
 
 module.exports.create = {
   body: Joi.object().keys({
+    _id: Joi.string().allow(null),
     tenantUuid: Joi.string().required(),
     macAddress: Joi.string().required(),
     vendor: Joi.string().required(),
     nickname: Joi.string().allow(null),
     description: Joi.string().allow(null),
     location: Joi.string().allow(null),
-    room: Joi.string().allow(null)
+    room: Joi.string().allow(null),
+    firmware: Joi.string().allow(null)
   })
 }
 
@@ -42,7 +44,8 @@ module.exports.assign = {
     room: Joi.string().optional().allow(null),
     createdAt: Joi.date().required(),
     updatedAt: Joi.date().required(),
-    __v: Joi.number().required()
+    __v: Joi.number().required(),
+    firmware: Joi.string().optional().allow(null)
   })
 }
 

@@ -48,6 +48,10 @@ const DeviceSchema = new Schema(
       type: String,
       default: null
     },
+    endpoint: {
+      type: String,
+      default: null
+    },
     transport: {
       type: String,
       default: 'udp'
@@ -59,6 +63,18 @@ const DeviceSchema = new Schema(
     expires: {
       type: Number,
       default: '120'
+    },
+    status: {
+      type: String,
+      default: 'offline'
+    },
+    lastSeen: {
+      type: Date,
+      default: null
+    },
+    rtt: {
+      type: Number,
+      default: null
     }
   },
   { timestamps: true }

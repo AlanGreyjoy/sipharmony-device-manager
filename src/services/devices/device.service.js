@@ -140,3 +140,25 @@ module.exports.updateFirmware = async (id, firmware) => {
  * @param {*} id
  */
 module.exports.deleteDevice = async id => {}
+
+/**
+ * Get a device by endpoint
+ * @param {*} endpoint
+ * @returns
+ */
+module.exports.getDeviceByEndpoint = async endpoint => {
+  return await Device.findOne({
+    endpoint
+  })
+}
+
+/**
+ * Get a device by user UUID
+ * @param {*} userUuid
+ * @returns
+ */
+module.exports.getDeviceByUserUuid = async userUuid => {
+  return await Device.findOne({
+    userUuid
+  })
+}

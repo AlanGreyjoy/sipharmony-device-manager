@@ -1,5 +1,7 @@
 const logger = require('../../../utils/logger')
 const AmiCommands = require('../../asterisk/commands/AmiCommands')
+const deviceLogsService = require('../../devices/deviceLogs.service')
+const deviceService = require('../../devices/device.service')
 
 module.exports = async (ami, event) => {
   logger.info('ContactStatus event received')
@@ -16,6 +18,8 @@ module.exports = async (ami, event) => {
   const userId = parameters['XIVO_USERID']
   const transport = parameters['transport']
 
+  if (transport === 'transport-wss') return
+
   if (!tenantUuid || !userUuid || !userId || !transport) {
     logger.error('Missing parameters to save device status')
     logger.error(
@@ -24,5 +28,27 @@ module.exports = async (ami, event) => {
     return
   }
 
-  // Check if device is in the db
+  const deviceInfo = {
+    uri,
+    contactStatus,
+    device,
+    rtt,
+    userUuid,
+    userId,
+    transport
+  }
+
+  const getDevice = await deviceService.getDeviceByUserUuid(userUuid)
+
+  if (!getDevice) return
+
+  deviceLogsService.addEvent({
+    deviceId: getDevice._id,
+    event: 'registration.status',
+    entry: deviceInfo
+  })
+
+  if (contactStatus === 'Reachable') {
+    deviceService.updateDevice(getDevice._id, { status: 'online', lastSeen: new Date(), rtt })
+  }
 }

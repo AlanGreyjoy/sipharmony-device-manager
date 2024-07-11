@@ -12,7 +12,7 @@ const DeviceLogsSchema = new Schema(
       default: 'static'
     },
     entry: {
-      type: String,
+      type: Object,
       required: true
     }
   },
