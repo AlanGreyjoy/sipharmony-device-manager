@@ -1,6 +1,5 @@
 const axios = require('axios')
 const logger = require('../../utils/logger')
-const wazoToken = require('./wazoToken.json')
 const WazoToken = require('../../models/WazoToken')
 const fs = require('fs')
 const path = require('path')
