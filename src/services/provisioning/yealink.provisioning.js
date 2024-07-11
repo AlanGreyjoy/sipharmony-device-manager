@@ -22,7 +22,13 @@ module.exports = async (device, requestedFile, tenantUuid) => {
     return generateCommonConfig(requestedFile, device)
   }
 
-  if (requestedFile === formatters.formatMacAddress(device.macAddress) + '.cfg') {
+  console.log(device)
+  console.log(requestedFile)
+
+  if (
+    requestedFile.toLowerCase() ===
+    formatters.formatMacAddress(device.macAddress).toLowerCase() + '.cfg'
+  ) {
     return generateMacConfig(requestedFile, device, tenantUuid)
   }
 
