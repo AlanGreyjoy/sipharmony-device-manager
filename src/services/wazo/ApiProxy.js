@@ -1,6 +1,7 @@
 const axios = require('axios')
 const logger = require('../../utils/logger')
 const wazoToken = require('./wazoToken.json')
+const WazoToken = require('../../models/WazoToken')
 const fs = require('fs')
 const path = require('path')
 
@@ -59,14 +60,20 @@ axiosInstance.interceptors.response.use(
 async function getWazoToken() {
   logger.info('Getting Wazo token...')
 
-  if (wazoToken && wazoToken.token) {
-    return wazoToken.token
+  const token = await WazoToken.findOne()
+
+  if (token) {
+    logger.info('Wazo token found in database', token.token)
+
+    return token.token
   }
 
   return createToken()
 }
 
 async function createToken() {
+  logger.info('Creating Wazo token...')
+
   const response = await axios
     .post(
       `${baseUrl}/auth/${version}/token`,
@@ -86,13 +93,21 @@ async function createToken() {
 
   logger.info('Wazo token created', response.data.data.token)
 
-  // Save token to wazoToken.json
-  fs.writeFileSync(
-    path.resolve(__dirname, 'wazoToken.json'),
-    JSON.stringify({
-      token: response.data.data.token
-    })
-  )
+  // Create or update token in database
+  const token = await WazoToken.findOne()
+
+  if (token) {
+    token.token = response.data.data.token
+    await token.save()
+
+    return token.token
+  }
+
+  const newToken = new WazoToken({
+    token: response.data.data.token
+  })
+
+  await newToken.save()
 
   return response.data.data.token
 }
