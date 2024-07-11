@@ -17,7 +17,7 @@ module.exports.parse = userAgent => {
       vendor: yealinkMatch[1],
       deviceModel: yealinkMatch[2],
       firmwareVersion: yealinkMatch[3],
-      macAddress: yealinkMatch[4]
+      macAddress: yealinkMatch[4]?.toUpperCase()
     }
   }
 
