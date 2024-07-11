@@ -21,7 +21,14 @@ module.exports.getRpsAccounts = async query => {
     searchParams.rpsType = query.rpsType
   }
 
-  const rpsAccounts = await RpsAccount.find(searchParams)
+  logger.debug('Search params:')
+  logger.debug(JSON.stringify(searchParams, null, 2))
+
+  const rpsAccounts = await RpsAccount.find({
+    ...searchParams
+  })
+
+  logger.debug(JSON.stringify(rpsAccounts, null, 2))
 
   return rpsAccounts
 }
