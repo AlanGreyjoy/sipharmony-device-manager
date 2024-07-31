@@ -13,12 +13,13 @@ module.exports = async (ami, event) => {
   const rtt = event.roundtripusec
 
   const parameters = await AmiCommands.pjSip.showEndpoint(ami, device)
+
+  const registration = await AmiCommands.database.showEndpointRegistration(ami, event.endpointname)
+
   const tenantUuid = parameters['__WAZO_TENANT_UUID']
   const userUuid = parameters['XIVO_USERUUID']
   const userId = parameters['XIVO_USERID']
   const transport = parameters['transport']
-
-  if (transport === 'transport-wss') return
 
   if (!tenantUuid || !userUuid || !userId || !transport) {
     logger.error('Missing parameters to save device status')
@@ -41,6 +42,8 @@ module.exports = async (ami, event) => {
   const getDevice = await deviceService.getDeviceByUserUuid(userUuid)
 
   if (!getDevice) return
+
+  if (transport === 'transport-wss') return
 
   deviceLogsService.addEvent({
     deviceId: getDevice._id,
